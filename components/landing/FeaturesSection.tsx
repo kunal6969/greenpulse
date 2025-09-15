@@ -24,7 +24,7 @@ const FeaturesSection: React.FC = () => {
             text: 'Proactively identify and address anomalies or underperforming systems using predictive analytics.'
         },
         {
-            title: 'Foster a Culture of Sustainability',
+            title: 'Gamified Leaderboards',
             text: 'Engage stakeholders through gamified behavior change, encouraging greener habits and collective responsibility.'
         }
     ];

@@ -7,7 +7,6 @@ import Dashboard from './components/dashboard/Dashboard';
 import AnalyticsPage from './components/analytics/AnalyticsPage';
 import AIInsightsPage from './components/ai-insights/AIInsightsPage';
 import ReportsPage from './components/reports/ReportsPage';
-import ChatbotWidget from './components/chat/ChatbotWidget';
 import { SimulationProvider } from './contexts/SimulationContext';
 import RewardsPage from './components/rewards/RewardsPage';
 
@@ -42,7 +41,6 @@ const App: React.FC = () => {
                         {currentPage.component}
                     </div>
                 </main>
-                <ChatbotWidget />
             </div>
         </SimulationProvider>
     );

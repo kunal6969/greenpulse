@@ -7,8 +7,8 @@ const TeamSection = () => {
     const { ref, isVisible } = useScrollAnimate();
 
     const team = [
-        { name: 'Kunal', role: 'Lead Web Developer & Database Architect', description: 'UI/UX, backend integration, and ASHRAE data handling.', icon: Database },
-        { name: 'Kavyansh', role: 'Web Developer', description: 'Specializes in dashboard design and gamification system development.', icon: Code },
+        { name: 'Kunal', role: 'Team Lead', description: 'UI/UX and Front-end Designer', icon: Database },
+        { name: 'Kavyansh', role: 'Web Developer', description: 'Specializes in dashboard design and backend architecture.', icon: Code },
         { name: 'Rishabh', role: 'AI/ML Engineer', description: 'Drives the prediction engine and counterfactual modeling for optimal insights.', icon: Brain }
     ];
 

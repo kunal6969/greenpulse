@@ -8,11 +8,10 @@ const HowItWorksSection: React.FC = () => {
 
     const steps = [
         { title: 'Real-Time Dashboard', text: 'Displays energy consumption broken down by building, unit, or device, using normalized kWh metrics for clear, comparable data.' },
-        { title: 'Counterfactual Modeling', text: 'Utilizes trained regression models (Random Forest / XGBoost) to compare actual energy usage against expected usage under similar conditions.' },
+        { title: 'Counterfactual Modeling', text: 'Utilizes trained regression models  to compare actual energy usage against expected usage under similar conditions.' },
         { title: 'Predictive Alerts', text: 'Employs outlier detection via Z-score and time-series trend deviation to issue proactive alerts for unusual energy patterns.' },
         { title: 'Gamification Engine', text: 'Features leaderboards based on relative energy savings (actual vs. counterfactual), incentivizing healthy competition and sustained behavioral change.' },
-        { title: 'Open API Layer', text: 'Provides REST endpoints for seamless integration, allowing easy uploading of consumption logs, querying model outputs, and accessing leaderboard data.' }
-    ];
+        ];
 
   return (
     <section ref={ref} className="py-20 bg-bg-secondary">
@@ -23,22 +22,11 @@ const HowItWorksSection: React.FC = () => {
                 Each feature is designed to provide actionable insights and drive energy efficiency through intelligent data analysis and user engagement.
             </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {steps.slice(0, 3).map((step, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {steps.map((step, index) => (
                 <Card key={index} className={`transition-all duration-500 ${isVisible ? 'animate-slide-and-fade-in' : 'opacity-0'}`} style={{animationDelay: `${(index + 2) * 150}ms`}}>
                     <div className="flex items-center">
                         <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-bold text-lg">{index + 1}</span>
-                        <h3 className="ml-4 text-xl font-bold text-text-primary">{step.title}</h3>
-                    </div>
-                    <p className="mt-4 text-text-secondary">{step.text}</p>
-                </Card>
-            ))}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 md:w-2/3 md:mx-auto">
-             {steps.slice(3, 5).map((step, index) => (
-                <Card key={index+3} className={`transition-all duration-500 ${isVisible ? 'animate-slide-and-fade-in' : 'opacity-0'}`} style={{animationDelay: `${(index + 5) * 150}ms`}}>
-                    <div className="flex items-center">
-                        <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-bold text-lg">{index + 4}</span>
                         <h3 className="ml-4 text-xl font-bold text-text-primary">{step.title}</h3>
                     </div>
                     <p className="mt-4 text-text-secondary">{step.text}</p>

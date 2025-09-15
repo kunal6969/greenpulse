@@ -1,4 +1,4 @@
-import { EnergyDataPoint, Alert, Anomaly, BuildingDataRecord } from '../types';
+import { EnergyDataPoint, Alert, Anomaly, BuildingDataRecord, LeaderboardEntry, LiveEvent } from '../types';
 
 export const API_BASE_URL = 'https://green-pulse.onrender.com';
 
@@ -17,11 +17,10 @@ export interface SuggestRequest {
     seq_length?: number;
 }
 
-
 export const fetchBuildingData = async (buildingId: number): Promise<BuildingDataRecord[]> => {
     const response = await fetch(`${API_BASE_URL}/building/${buildingId}`);
     if (!response.ok) {
-        throw new Error(`Failed to fetch building data for building ${buildingId}`);
+        throw new Error(`Failed to fetch building data. Server responded with status: ${response.status}`);
     }
     return response.json();
 };
@@ -31,55 +30,13 @@ export interface BuildingCumulativeData {
     cumulative_net_savings: number;
 }
 
-/**
- * Mocks fetching and calculating cumulative savings data for all buildings over the last 24 hours.
- * This is used to power the live leaderboard with rolling 24h performance data.
- * @param endTime The specific time marking the end of the 24-hour window.
- * @returns A promise that resolves to an array of objects containing building ID and their cumulative savings.
- */
 export const fetchAllBuildingsCumulativeData = async (endTime: Date): Promise<BuildingCumulativeData[]> => {
-    const startTime = new Date(endTime);
-    startTime.setHours(endTime.getHours() - 24);
-
-    const cumulativeSavings: { [buildingId: number]: number } = {};
-
-    // Initialize savings map for all 100 buildings
-    for (let i = 1; i <= 100; i++) {
-        cumulativeSavings[i] = 0;
+    const response = await fetch(`${API_BASE_URL}/leaderboard?time=${endTime.toISOString()}`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch leaderboard data. Server responded with status: ${response.status}`);
     }
-
-    // Loop through each hour in the last 24-hour window
-    for (let h = 0; h < 24; h++) {
-        const currentTime = new Date(startTime);
-        currentTime.setHours(startTime.getHours() + h);
-        const hour = currentTime.getHours();
-
-        // Generate data for each building for the current hour and add to cumulative savings
-        for (let i = 1; i <= 100; i++) {
-            // Re-use the same plausible data generation logic for consistency
-            const basePredicted = 40 + (i % 20) * 3 + Math.sin(i) * 5;
-            const timeFactor = Math.sin((hour * Math.PI) / 24) * 25; // Daily curve
-            const predicted = basePredicted + timeFactor + (Math.random() - 0.5) * 5;
-            
-            const baseSavings = (i % 15) - 5; // Some buildings are inherently better/worse
-            const randomSavingsFactor = (Math.random() - 0.4) * 8; // Performance fluctuation
-            const actual = predicted - (baseSavings + randomSavingsFactor);
-            
-            const netSavingForHour = predicted - actual;
-            cumulativeSavings[i] += netSavingForHour;
-        }
-    }
-    
-    const result: BuildingCumulativeData[] = Object.entries(cumulativeSavings).map(([buildingId, savings]) => ({
-        building_id: Number(buildingId),
-        cumulative_net_savings: savings,
-    }));
-    
-    // Simulate a slightly longer network delay as this is a more intensive "query"
-    await new Promise(res => setTimeout(res, 400));
-    return result;
+    return response.json();
 };
-
 
 export const predictFutureUsage = async (data: PredictRequest): Promise<BuildingDataRecord[]> => {
     const response = await fetch(`${API_BASE_URL}/predict_future_usage`, {
@@ -88,7 +45,7 @@ export const predictFutureUsage = async (data: PredictRequest): Promise<Building
         body: JSON.stringify(data),
     });
     if (!response.ok) {
-        throw new Error('Failed to get prediction');
+        throw new Error(`Prediction server responded with status: ${response.status}`);
     }
     return response.json();
 };
@@ -119,30 +76,35 @@ export const processApiData = (records: BuildingDataRecord[]): EnergyDataPoint[]
       .sort((a, b) => a.historical!.getTime() - b.historical!.getTime());
 };
 
+export const fetchAlerts = async (time: Date): Promise<Alert[]> => {
+    const response = await fetch(`${API_BASE_URL}/alerts?time=${time.toISOString()}`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch alerts. Server responded with status: ${response.status}`);
+    }
+    return response.json();
+};
 
-// Dummy data and functions to keep other parts of the app from breaking
-const DUMMY_POINT: EnergyDataPoint = { time: '12:00', actual: 50, predicted: 55, historical: new Date() };
+export interface BuildingBreakdownData {
+  id: string;
+  name: string;
+  usage: number;
+  change: number;
+}
 
-export const dataService = {
-  // These functions are now less relevant but kept for components that haven't been refactored
-  generateAlerts: (time: Date): Alert[] => {
-    return [
-      { id: '1', timestamp: 'Just now', severity: 'high', building: 'Science Wing', description: `HVAC unit exceeded predicted usage.` },
-      { id: '3', timestamp: '5 hours ago', severity: 'low', building: 'Admin Block', description: 'Server room temperature slightly above optimal.' },
-    ];
-  },
-  generateAnomalies: (time: Date): Anomaly[] => {
-     return [
-       {
-         id: `anomaly-1`,
-         timestamp: new Date().toLocaleString(),
-         building: 'Science Wing',
-         device: 'HVAC Unit 3',
-         severity: 'high',
-         description: `Unscheduled spike detected.`,
-         deviation: 0.6,
-         data: [{time: '10:00', actual: 80, predicted: 50}, {time: '11:00', actual: 95, predicted: 55}]
-       }
-     ];
-  },
+export const fetchBuildingBreakdown = async (time: Date): Promise<BuildingBreakdownData[]> => {
+    const response = await fetch(`${API_BASE_URL}/building_breakdown?time=${time.toISOString()}`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch building breakdown. Server responded with status: ${response.status}`);
+    }
+    return response.json();
+};
+
+export const fetchLiveEvents = async (since?: Date): Promise<LiveEvent[]> => {
+    // If no 'since' date is provided, fetch the last 10 minutes of events.
+    const sinceTimestamp = since ? since.toISOString() : new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    const response = await fetch(`${API_BASE_URL}/live_events?since=${sinceTimestamp}`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch live events. Server responded with status: ${response.status}`);
+    }
+    return response.json();
 };

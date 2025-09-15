@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { Bot, X, Send, Cpu, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Bot, X, Send, Cpu, AlertTriangle, CheckCircle, LogOut } from 'lucide-react';
 import { ChatMessage, EnergyDataPoint } from '../../types';
 import { AI_SUGGESTIONS } from '../../constants';
 import { streamChatResponse } from '../../services/geminiService';
@@ -185,6 +185,18 @@ const ChatbotWidget: React.FC = () => {
             <Send size={16} />
           </button>
         </div>
+      </div>
+      
+      {/* Exit Button */}
+      <div className="border-t border-glass-border">
+        <button
+          onClick={() => setIsOpen(false)}
+          className="w-full flex items-center justify-center space-x-2 py-2 text-sm text-text-secondary hover:bg-red-500/10 hover:text-red-400 transition-colors"
+          aria-label="Exit chat"
+        >
+          <LogOut size={16} />
+          <span>Exit Chat</span>
+        </button>
       </div>
     </div>
   );

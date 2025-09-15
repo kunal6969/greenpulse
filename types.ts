@@ -1,4 +1,3 @@
-
 export interface BuildingDataRecord {
   timestamp: string;
   meter_reading: number | null;
@@ -47,12 +46,6 @@ export interface Anomaly {
     data: { time: string; actual: number | null; predicted: number | null }[];
 }
 
-export interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  text: string;
-}
-
 export interface LiveEvent {
   id: string;
   timestamp: string;
@@ -78,4 +71,10 @@ export interface ReportSummary {
   lowestConsumption: { value: number; time: string; };
   anomalyCount: number;
   buildingId: number;
+}
+// FIX: Added ChatMessage interface to be used by the ChatbotWidget.
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  text: string;
 }
