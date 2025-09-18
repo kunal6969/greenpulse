@@ -1,5 +1,7 @@
 import { EnergyDataPoint, Alert, Anomaly, BuildingDataRecord, LeaderboardEntry, LiveEvent } from '../types';
 
+// The error message indicates the path does not contain '/api'.
+// Removing it to align with the observed network request.
 export const API_BASE_URL = 'https://green-pulse.onrender.com';
 
 export interface PredictRequest {
@@ -17,12 +19,59 @@ export interface SuggestRequest {
     seq_length?: number;
 }
 
-export const fetchBuildingData = async (buildingId: number): Promise<BuildingDataRecord[]> => {
-    const response = await fetch(`${API_BASE_URL}/building/${buildingId}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch building data. Server responded with status: ${response.status}`);
+// --- API HELPER ---
+
+/**
+ * A generic helper function to fetch data from the API backend.
+ * It handles the base URL, error checking, and JSON parsing.
+ * @param endpoint The API endpoint to request (e.g., '/leaderboard').
+ * @param options Optional fetch options (for POST requests, etc.).
+ * @returns A promise that resolves to the JSON response.
+ */
+async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
+    // The application requires a CORS proxy to bypass browser restrictions when fetching data
+    // from the API server. Public proxies can be unreliable; this one is being used as an alternative
+    // to previously failing ones.
+    const PROXY_URL = 'https://cors.eu.org/';
+    const targetUrl = `${API_BASE_URL}${endpoint}`;
+    const proxyRequestUrl = `${PROXY_URL}${targetUrl}`;
+    
+    try {
+        const response = await fetch(proxyRequestUrl, options);
+        
+        if (!response.ok) {
+            const errorBody = await response.text();
+            console.error(`API server error via proxy for ${targetUrl}: ${response.status}`, errorBody);
+            throw new Error(`API request failed. The proxy server responded with status: ${response.status}`);
+        }
+        
+        const textResponse = await response.text();
+        try {
+            return JSON.parse(textResponse) as T;
+        } catch (e) {
+            console.error("Failed to parse JSON response. Raw response:", textResponse);
+            throw new Error(`The response from the server was not valid JSON, which may indicate an API error.`);
+        }
+
+    } catch (error) {
+        console.error(`Network error during fetch for endpoint "${endpoint}":`, error);
+        if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+             // This error can occur if the CORS proxy is offline, the API server is down,
+             // or there is a general network connectivity problem.
+             throw new Error(`Network Error: Could not connect to the API via the CORS proxy. Please check your internet connection and the status of the API server.`);
+        }
+        // Re-throw other errors
+        throw error;
     }
-    return response.json();
+}
+
+
+// --- REAL API FUNCTIONS ---
+
+export const fetchBuildingData = async (buildingId: number): Promise<BuildingDataRecord[]> => {
+    console.log(`Fetching data for building ${buildingId}`);
+    // Corrected endpoint based on user feedback.
+    return apiFetch<BuildingDataRecord[]>(`/building/${buildingId}`);
 };
 
 export interface BuildingCumulativeData {
@@ -31,37 +80,65 @@ export interface BuildingCumulativeData {
 }
 
 export const fetchAllBuildingsCumulativeData = async (endTime: Date): Promise<BuildingCumulativeData[]> => {
-    const response = await fetch(`${API_BASE_URL}/leaderboard?time=${endTime.toISOString()}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch leaderboard data. Server responded with status: ${response.status}`);
-    }
-    return response.json();
+    console.log(`Fetching efficiency data for all buildings up to time ${endTime.toISOString()}`);
+    
+    // Per user request, use the /building/:id endpoint for each building.
+    // Fetching for 20 buildings as a balance between completeness and performance.
+    const buildingIds = Array.from({ length: 20 }, (_, i) => i + 1);
+    
+    const buildingDataPromises = buildingIds.map(id => fetchBuildingData(id));
+    
+    // Use Promise.allSettled to handle potential failures for individual buildings
+    const results = await Promise.allSettled(buildingDataPromises);
+
+    const cumulativeData: BuildingCumulativeData[] = [];
+
+    results.forEach((result, index) => {
+        const building_id = buildingIds[index];
+
+        if (result.status === 'fulfilled' && result.value && result.value.length > 0) {
+            const records = result.value;
+            const relevantRecords = records.filter(record => new Date(record.timestamp) <= endTime);
+
+            const savings = relevantRecords.reduce((total, record) => {
+                const actual = record.meter_reading ?? 0;
+                const predicted = record.predicted_meter_reading ?? 0;
+                return total + (predicted - actual);
+            }, 0);
+
+            cumulativeData.push({
+                building_id: building_id,
+                cumulative_net_savings: savings
+            });
+        } else {
+            // If fetch failed or returned no data, treat savings as 0.
+            if (result.status === 'rejected') {
+                console.error(`Failed to fetch data for building ${building_id}:`, result.reason);
+            }
+            cumulativeData.push({ building_id, cumulative_net_savings: 0 });
+        }
+    });
+
+    return cumulativeData;
 };
 
 export const predictFutureUsage = async (data: PredictRequest): Promise<BuildingDataRecord[]> => {
-    const response = await fetch(`${API_BASE_URL}/predict_future_usage`, {
+    console.log(`Forecasting future usage for building ${data.building_id}`);
+    return apiFetch<BuildingDataRecord[]>('/forecast', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     });
-    if (!response.ok) {
-        throw new Error(`Prediction server responded with status: ${response.status}`);
-    }
-    return response.json();
 };
 
-export const suggestParamAdjustment = async (data: SuggestRequest) => {
-    const response = await fetch(`${API_BASE_URL}/suggest_param_adjustment`, {
+export const suggestParamAdjustment = async (data: SuggestRequest): Promise<{ suggestion: string }> => {
+    console.log('Suggesting param adjustment');
+    return apiFetch<{ suggestion: string }>('/suggest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     });
-    if (!response.ok) {
-        throw new Error('Failed to get suggestion');
-    }
-    return response.json();
 };
-
 
 export const processApiData = (records: BuildingDataRecord[]): EnergyDataPoint[] => {
     if (!records || records.length === 0) return [];
@@ -77,11 +154,8 @@ export const processApiData = (records: BuildingDataRecord[]): EnergyDataPoint[]
 };
 
 export const fetchAlerts = async (time: Date): Promise<Alert[]> => {
-    const response = await fetch(`${API_BASE_URL}/alerts?time=${time.toISOString()}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch alerts. Server responded with status: ${response.status}`);
-    }
-    return response.json();
+    console.log(`Fetching alerts for time ${time.toISOString()}`);
+    return apiFetch<Alert[]>(`/alerts?time=${time.toISOString()}`);
 };
 
 export interface BuildingBreakdownData {
@@ -92,19 +166,12 @@ export interface BuildingBreakdownData {
 }
 
 export const fetchBuildingBreakdown = async (time: Date): Promise<BuildingBreakdownData[]> => {
-    const response = await fetch(`${API_BASE_URL}/building_breakdown?time=${time.toISOString()}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch building breakdown. Server responded with status: ${response.status}`);
-    }
-    return response.json();
+    console.log(`Fetching building breakdown for time ${time.toISOString()}`);
+    return apiFetch<BuildingBreakdownData[]>(`/breakdown?time=${time.toISOString()}`);
 };
 
 export const fetchLiveEvents = async (since?: Date): Promise<LiveEvent[]> => {
-    // If no 'since' date is provided, fetch the last 10 minutes of events.
-    const sinceTimestamp = since ? since.toISOString() : new Date(Date.now() - 10 * 60 * 1000).toISOString();
-    const response = await fetch(`${API_BASE_URL}/live_events?since=${sinceTimestamp}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch live events. Server responded with status: ${response.status}`);
-    }
-    return response.json();
+    const endpoint = since ? `/events?since=${since.toISOString()}` : '/events';
+    console.log(`Fetching live events from ${endpoint}`);
+    return apiFetch<LiveEvent[]>(endpoint);
 };
