@@ -9,7 +9,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onLogin }) => {
   return (
     <section className="pt-32 pb-20 text-center container mx-auto px-6">
       <h1 className="text-5xl md:text-7xl font-bold text-text-primary leading-tight animate-fade-in">
-        Green Pulse: Real-time energy insights for a <span className="text-primary">sustainable tomorrow</span>
+        Green Pulse: Real-time energy insights for a <span className="text-primary">better sustainable tomorrow</span>
       </h1>
       <p className="mt-8 max-w-3xl mx-auto text-lg text-text-secondary animate-fade-in" style={{ animationDelay: '200ms' }}>
         Many campuses and offices lack a centralized system to monitor energy usage. Our platform addresses this by introducing a sophisticated, real-time smart energy dashboard to reduce waste and improve efficiency.
