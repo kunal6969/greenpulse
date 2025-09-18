@@ -65,13 +65,27 @@ async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> 
     }
 }
 
+// FIX: Added a cache for building data to prevent redundant API calls.
+const buildingDataCache = new Map<number, BuildingDataRecord[]>();
 
 // --- REAL API FUNCTIONS ---
 
 export const fetchBuildingData = async (buildingId: number): Promise<BuildingDataRecord[]> => {
+    // FIX: Check the cache before making a network request.
+    if (buildingDataCache.has(buildingId)) {
+        console.log(`Cache hit for building ${buildingId}`);
+        return buildingDataCache.get(buildingId)!;
+    }
+
     console.log(`Fetching data for building ${buildingId}`);
-    // Corrected endpoint based on user feedback.
-    return apiFetch<BuildingDataRecord[]>(`/building/${buildingId}`);
+    const data = await apiFetch<BuildingDataRecord[]>(`/building/${buildingId}`);
+    
+    // FIX: Store the fetched data in the cache for future use.
+    if (data && data.length > 0) {
+        buildingDataCache.set(buildingId, data);
+    }
+    
+    return data;
 };
 
 export interface BuildingCumulativeData {
