@@ -29,20 +29,18 @@ export interface SuggestRequest {
  * @returns A promise that resolves to the JSON response.
  */
 async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    // The application requires a CORS proxy to bypass browser restrictions when fetching data
-    // from the API server. Public proxies can be unreliable; this one is being used as an alternative
-    // to previously failing ones.
-    const PROXY_URL = 'https://cors.eu.org/';
-    const targetUrl = `${API_BASE_URL}${endpoint}`;
-    const proxyRequestUrl = `${PROXY_URL}${targetUrl}`;
+    // The backend server now has CORS enabled (allow_origins=["*"]),
+    // which means a CORS proxy is no longer needed and may cause issues with POST request bodies.
+    // Removing the proxy and fetching directly from the API.
+    const requestUrl = `${API_BASE_URL}${endpoint}`;
     
     try {
-        const response = await fetch(proxyRequestUrl, options);
+        const response = await fetch(requestUrl, options);
         
         if (!response.ok) {
             const errorBody = await response.text();
-            console.error(`API server error via proxy for ${targetUrl}: ${response.status}`, errorBody);
-            throw new Error(`API request failed. The proxy server responded with status: ${response.status}`);
+            console.error(`API server error for ${requestUrl}: ${response.status}`, errorBody);
+            throw new Error(`API request failed with status ${response.status}. See console for details.`);
         }
         
         const textResponse = await response.text();
@@ -56,9 +54,8 @@ async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> 
     } catch (error) {
         console.error(`Network error during fetch for endpoint "${endpoint}":`, error);
         if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-             // This error can occur if the CORS proxy is offline, the API server is down,
-             // or there is a general network connectivity problem.
-             throw new Error(`Network Error: Could not connect to the API via the CORS proxy. Please check your internet connection and the status of the API server.`);
+             // This error can occur if the API server is down or there is a general network connectivity problem.
+             throw new Error(`Network Error: Could not connect to the API server at ${API_BASE_URL}. Please check your internet connection and the status of the API server.`);
         }
         // Re-throw other errors
         throw error;
@@ -138,7 +135,7 @@ export const fetchAllBuildingsCumulativeData = async (endTime: Date): Promise<Bu
 
 export const predictFutureUsage = async (data: PredictRequest): Promise<BuildingDataRecord[]> => {
     console.log(`Forecasting future usage for building ${data.building_id}`);
-    return apiFetch<BuildingDataRecord[]>('/forecast', {
+    return apiFetch<BuildingDataRecord[]>('/predict_future_usage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -147,7 +144,7 @@ export const predictFutureUsage = async (data: PredictRequest): Promise<Building
 
 export const suggestParamAdjustment = async (data: SuggestRequest): Promise<{ suggestion: string }> => {
     console.log('Suggesting param adjustment');
-    return apiFetch<{ suggestion: string }>('/suggest', {
+    return apiFetch<{ suggestion: string }>('/suggest_param_adjustment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
