@@ -15,10 +15,13 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(({ children, className 
       ref={ref}
       style={style}
       className={`
-        bg-card-bg/50 backdrop-blur-md 
+        bg-card-bg/80 backdrop-blur-lg 
         border border-glass-border 
         rounded-2xl shadow-card
-        p-4 sm:p-6 ${className}
+        p-4 sm:p-6 
+        transition-all duration-500 ease-in-out
+        hover:border-primary/50 hover:shadow-glow-primary hover:-translate-y-1
+        ${className}
       `}
     >
       {children}

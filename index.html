@@ -22,6 +22,7 @@
         :root {
             --bg-primary: #0A1212;
             --bg-secondary: #101C1C;
+            --bg-pulse: #0D1717;
             --card-bg: #1A2929;
             --text-primary: #E0E7FF;
             --text-secondary: #A8B2D1;
@@ -38,8 +39,17 @@
             /* Fallback for browsers that don't support the JS config */
             background-color: var(--bg-primary);
             font-family: 'Outfit', sans-serif;
+            /* Hide default cursor to show custom one */
+            cursor: none;
+            /* Add subtle background pulse */
+            animation: subtle-background-pulse 20s infinite ease-in-out;
         }
-
+        
+        /* General smooth transitions for interactive elements */
+        a, button, [role="button"], input, select {
+            transition: all 0.5s ease-in-out;
+        }
+        
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -54,8 +64,222 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--primary-focus);
         }
+
+        /* --- New Cursor Sparkle Effect --- */
+        .sparkle {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            box-shadow: 0 0 8px var(--primary), 0 0 12px var(--primary-focus);
+            animation: electricity 0.5s ease-out forwards;
+        }
         
-        /* Keyframe Animations from component classNames */
+        @keyframes electricity {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        /* --- New Floating Leaves Background --- */
+        @keyframes fall-bg {
+          0% {
+            transform: translateX(0) translateY(-10vh) rotate(10deg);
+            opacity: 0;
+          }
+          10% {
+             opacity: var(--leaf-opacity, 0.2);
+          }
+          90% {
+             opacity: var(--leaf-opacity, 0.2);
+          }
+          100% {
+            transform: translateX(var(--translateX-bg, 0)) translateY(110vh) rotate(var(--rotate-bg));
+            opacity: 0;
+          }
+        }
+        @keyframes swing-bg {
+          0%, 100% { transform: translateX(0) rotate(0deg); }
+          50% { transform: translateX(var(--swingX-bg)) rotate(var(--swingRotate-bg)); }
+        }
+        .leaf-container-bg {
+          position: absolute;
+          top: 0;
+          left: var(--left-bg);
+          animation: fall-bg var(--fall-duration-bg) linear infinite;
+          filter: drop-shadow(0 0 8px rgba(104, 216, 177, 0.5));
+        }
+        .leaf-swing-bg {
+          animation: swing-bg var(--swing-duration-bg) ease-in-out infinite alternate;
+        }
+        
+        /* --- New Flowing Glints --- */
+        .glint {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 150px;
+            background: linear-gradient(180deg, rgba(104, 216, 177, 0), rgba(104, 216, 177, 0.5), rgba(104, 216, 177, 0));
+            pointer-events: none;
+            z-index: -5;
+        }
+        
+        @keyframes flowing-glint-1 {
+            0% { transform: translate(-100vw, -50vh) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(100vw, 50vh) rotate(45deg); opacity: 0; }
+        }
+        @keyframes flowing-glint-2 {
+            0% { transform: translate(100vw, -30vh) rotate(115deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(-100vw, 70vh) rotate(115deg); opacity: 0; }
+        }
+        @keyframes flowing-glint-3 {
+            0% { transform: translate(50vw, -100vh) rotate(15deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(-50vw, 100vh) rotate(15deg); opacity: 0; }
+        }
+
+        .animate-flowing-glint-1 { animation: flowing-glint-1 linear infinite; }
+        .animate-flowing-glint-2 { animation: flowing-glint-2 linear infinite; }
+        .animate-flowing-glint-3 { animation: flowing-glint-3 linear infinite; }
+        
+        /* --- New Glowing Orbs --- */
+        .glowing-orb {
+            position: fixed;
+            z-index: -9;
+            top: var(--y-pos);
+            left: var(--x-pos);
+            width: var(--size);
+            height: var(--size);
+            border-radius: 50%;
+            background-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary-focus);
+            animation: 
+                float-drift var(--duration) infinite alternate ease-in-out,
+                pulse-orb 4s infinite alternate ease-in-out;
+            animation-delay: var(--delay), var(--pulse-delay);
+        }
+
+        @keyframes float-drift {
+            from {
+                transform: translate(0, 0);
+            }
+            to {
+                transform: translate(var(--drift-x), var(--drift-y));
+            }
+        }
+
+        @keyframes pulse-orb {
+            from {
+                opacity: 0.2;
+                box-shadow: 0 0 8px var(--primary), 0 0 16px var(--primary);
+            }
+            to {
+                opacity: 0.6;
+                box-shadow: 0 0 12px var(--primary-focus), 0 0 24px var(--primary-focus);
+            }
+        }
+        
+        /* --- New Aurora Background --- */
+        .aurora-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60vh;
+            z-index: -10;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .aurora-layer {
+            position: absolute;
+            inset: -200%;
+            opacity: 0;
+            animation: aurora-flow linear infinite;
+        }
+        .aurora-layer-1 {
+            background: radial-gradient(circle at 30% 30%, hsla(158, 64%, 60%, 0.1) 0%, transparent 50%);
+            animation-duration: 25s;
+        }
+        .aurora-layer-2 {
+            background: radial-gradient(circle at 70% 50%, hsla(158, 64%, 60%, 0.08) 0%, transparent 45%);
+            animation-duration: 20s;
+            animation-delay: -5s;
+        }
+        .aurora-layer-3 {
+            background: radial-gradient(circle at 50% 80%, hsla(158, 64%, 60%, 0.12) 0%, transparent 55%);
+            animation-duration: 30s;
+            animation-delay: -10s;
+        }
+        @keyframes aurora-flow {
+            0% {
+                transform: translate(0%, 0%) rotate(0deg) scale(1.2);
+                opacity: 0.1;
+            }
+            20% {
+                transform: translate(10%, -15%) rotate(-5deg) scale(1.3);
+                opacity: 0.15;
+            }
+            40% {
+                transform: translate(-15%, 5%) rotate(8deg) scale(1.1);
+                opacity: 0.2;
+            }
+            60% {
+                transform: translate(5%, 15%) rotate(-10deg) scale(1.4);
+                opacity: 0.18;
+            }
+            80% {
+                transform: translate(-10%, -10%) rotate(3deg) scale(1.2);
+                opacity: 0.15;
+            }
+            100% {
+                transform: translate(0%, 0%) rotate(0deg) scale(1.2);
+                opacity: 0.1;
+            }
+        }
+
+        /* --- New Drifting Particles --- */
+        .particle {
+            position: fixed;
+            border-radius: 50%;
+            background-color: var(--primary);
+            z-index: -9;
+            pointer-events: none;
+            animation: drift-particle linear infinite;
+        }
+        @keyframes drift-particle {
+            0% {
+                transform: translate(var(--start-x), var(--start-y));
+                opacity: 0;
+            }
+            10% {
+                opacity: var(--max-opacity);
+            }
+            90% {
+                opacity: var(--max-opacity);
+            }
+            100% {
+                transform: translate(var(--end-x), var(--end-y));
+                opacity: 0;
+            }
+        }
+
+        /* --- General Keyframe Animations --- */
+        @keyframes subtle-background-pulse {
+            0%, 100% { background-color: var(--bg-primary); }
+            50% { background-color: var(--bg-pulse); }
+        }
+
         @keyframes fade-in {
             from { opacity: 0; }
             to { opacity: 1; }

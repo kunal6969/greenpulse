@@ -17,7 +17,7 @@ const LandingHeader: React.FC<LandingHeaderProps> = ({ onLogin }) => {
             </svg>
             <span className="text-lg font-bold ml-2 text-primary">GREENPULSE</span>
         </div>
-        <button onClick={onLogin} className="bg-primary text-bg-primary font-bold py-2 px-5 rounded-lg flex items-center space-x-2 hover:bg-primary-focus transition-transform duration-300 hover:scale-105">
+        <button onClick={onLogin} className="bg-primary text-bg-primary font-bold py-2 px-5 rounded-lg flex items-center space-x-2 hover:bg-primary-focus transition-transform duration-500 hover:scale-105">
           <span>Go to Dashboard</span>
           <ArrowRight size={20} />
         </button>
