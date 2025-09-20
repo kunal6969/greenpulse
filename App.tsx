@@ -8,7 +8,6 @@ import AIInsightsPage from './components/ai-insights/AIInsightsPage';
 import ReportsPage from './components/reports/ReportsPage';
 import { SimulationProvider } from './contexts/SimulationContext';
 import RewardsPage from './components/rewards/RewardsPage';
-import CursorSparkle from './components/ui/CursorSparkle';
 import FloatingLeaves from './components/ui/FloatingLeaves';
 import FlowingGlints from './components/ui/FlowingGlints';
 import AmbientSoundPlayer from './components/ui/AmbientSoundPlayer';
@@ -39,7 +38,6 @@ const App: React.FC = () => {
 
     return (
         <SimulationProvider>
-            <CursorSparkle />
             <FloatingLeaves />
             <FlowingGlints />
             <AuroraBackground />

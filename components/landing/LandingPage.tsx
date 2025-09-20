@@ -6,7 +6,6 @@ import HowItWorksSection from './HowItWorksSection';
 import DifferentiatorsSection from './DifferentiatorsSection';
 import TeamSection from './TeamSection';
 import LandingFooter from './LandingFooter';
-import CursorSparkle from '../ui/CursorSparkle';
 import FloatingLeaves from '../ui/FloatingLeaves';
 import FlowingGlints from '../ui/FlowingGlints';
 import AmbientSoundPlayer from '../ui/AmbientSoundPlayer';
@@ -21,7 +20,6 @@ interface LandingPageProps {
 const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
   return (
     <div className="bg-bg-primary/80 text-text-primary font-outfit relative">
-      <CursorSparkle />
       <FloatingLeaves />
       <FlowingGlints />
       <AuroraBackground />
