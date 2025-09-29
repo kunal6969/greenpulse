@@ -1,15 +1,15 @@
 import React from 'react';
-import { BrainCircuit, Ban, Lightbulb, Trophy } from 'lucide-react';
+import { BrainCircuit, Layers, PlugZap, Trophy } from 'lucide-react';
 import useScrollAnimate from '../../hooks/useScrollAnimate';
 
 const DifferentiatorsSection = () => {
     const { ref, isVisible } = useScrollAnimate();
     
     const differentiators = [
-        { icon: BrainCircuit, title: 'AI-Driven Counterfactuals', text: 'Our platform uses sophisticated AI to simulate optimal energy usage based on weather, time-of-day, building type, and historical patterns, providing highly accurate benchmarks.' },
-        { icon: Lightbulb, title: 'Explainable AI', text: 'Outputs include contributing factors for anomalies (e.g., heating spikes due to occupancy or ambient temperature), making the AI\'s recommendations transparent and actionable.' },
-        { icon: Ban, title: 'No Vendor Lock-in', text: 'Our flexible system works seamlessly with manual inputs, utility APIs, or future IoT feeds, ensuring adaptability and avoiding proprietary restrictions.' },
-        { icon: Trophy, title: 'Gamification Logic', text: 'We incentivize sustained behavioral impact by using a savings-to-benchmark ratio as a scoring mechanism, fostering engagement and long-term energy reduction.' },
+        { icon: BrainCircuit, title: 'AI-Driven Counterfactuals', text: 'Our platform uses sophisticated AI to simulate optimal energy usage based on weather, time-of-day, and historical patterns, providing highly accurate benchmarks.' },
+        { icon: Layers, title: 'Integrated Tech Stack', text: 'Our solution uniquely combines ASHRAE data, predictive AI analytics, behavioral analysis, and blockchain into one scalable platform.' },
+        { icon: PlugZap, title: 'Future-Ready Integration', text: 'Provides seamless integration with renewable sources and existing infrastructure like IoT-enabled smart meters, ensuring your system evolves with technology.' },
+        { icon: Trophy, title: 'Behavioral-Focused Gamification', text: 'We incentivize sustained behavioral impact by using a savings-to-benchmark ratio as a scoring mechanism, fostering engagement and long-term energy reduction.' },
     ];
 
     return (
@@ -18,7 +18,7 @@ const DifferentiatorsSection = () => {
                 <div className="text-center mb-12">
                     <h2 className={`text-4xl md:text-5xl font-bold text-text-primary transition-all duration-500 ${isVisible ? 'animate-slide-and-fade-in' : 'opacity-0'}`}>What Sets Us Apart</h2>
                      <p className={`mt-4 max-w-3xl mx-auto text-text-secondary transition-all duration-500 ${isVisible ? 'animate-slide-and-fade-in' : 'opacity-0'}`} style={{animationDelay: '150ms'}}>
-                        Our solution uniquely combines ASHRAE Data, AI Optimization, and Behavioral UX to deliver unparalleled energy management capabilities.
+                        Our solution uniquely combines cutting-edge technology and behavioral science to deliver unparalleled energy management capabilities.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

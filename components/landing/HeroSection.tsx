@@ -9,10 +9,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onLogin }) => {
   return (
     <section className="pt-32 pb-20 text-center container mx-auto px-6">
       <h1 className="text-5xl md:text-7xl font-bold text-text-primary leading-tight animate-fade-in">
-        Green Pulse: Real-time energy insights for a <span className="text-primary">better sustainable tomorrow</span>
+        A Web-Based Platform to Monitor, Predict, and <span className="text-primary">Manage Institutional Energy Usage</span>
       </h1>
       <p className="mt-8 max-w-3xl mx-auto text-lg text-text-secondary animate-fade-in" style={{ animationDelay: '200ms' }}>
-        Many campuses and offices lack a centralized system to monitor energy usage. Our platform addresses this by introducing a sophisticated, real-time smart energy dashboard to reduce waste and improve efficiency.
+        GreenPulse leverages AI-driven analytics and predictive alerts to reduce energy waste by 30-50%, providing the real-time insights needed to foster a culture of sustainability.
       </p>
       <div className="mt-10 animate-fade-in" style={{ animationDelay: '400ms' }}>
         <button onClick={onLogin} className="bg-primary text-bg-primary font-bold py-3 px-8 rounded-lg flex items-center space-x-2 hover:bg-primary-focus transition-transform duration-500 hover:scale-105 mx-auto text-lg shadow-glow-primary">

@@ -16,25 +16,25 @@ const FeatureCard = ({ title, text, delay }: { title: string, text: string, dela
 const FeaturesSection: React.FC = () => {
     const features = [
         {
-            title: 'Reduce Energy Waste',
-            text: 'Minimize unnecessary consumption through precise monitoring and data-driven insights.'
+            title: 'Reduce Energy Waste by 30-50%',
+            text: 'Leverage AI-driven counterfactual benchmarks and predictive alerts to identify and eliminate unnecessary energy consumption.'
         },
         {
-            title: 'Spot Inefficiencies Early',
-            text: 'Proactively identify and address anomalies or underperforming systems using predictive analytics.'
+            title: 'Real-Time Monitoring',
+            text: 'Solve inefficient energy management with a dynamic dashboard that provides instant insights into your energy consumption patterns.'
         },
         {
-            title: 'Gamified Leaderboards',
-            text: 'Engage stakeholders through gamified behavior change, encouraging greener habits and collective responsibility.'
+            title: 'Gamified Engagement',
+            text: 'Our gamification dashboard incentivizes long-term engagement through contests and leaderboards based on energy savings.'
         }
     ];
 
   return (
     <section className="py-20 container mx-auto px-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* FIX: Refactored to spread feature properties. */}
+        {/* FIX: Replaced prop spreading with explicit props for FeatureCard to avoid passing down invalid props. */}
         {features.map((feature, index) => (
-            <FeatureCard key={index} {...feature} delay={index * 150} />
+            <FeatureCard key={index} title={feature.title} text={feature.text} delay={index * 150} />
         ))}
       </div>
     </section>

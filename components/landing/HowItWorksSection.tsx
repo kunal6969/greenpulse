@@ -7,10 +7,10 @@ const HowItWorksSection: React.FC = () => {
     const { ref, isVisible } = useScrollAnimate();
 
     const steps = [
-        { title: 'Real-Time Dashboard', text: 'Displays energy consumption broken down by building, unit, or device, using normalized kWh metrics for clear, comparable data.' },
-        { title: 'Counterfactual Modeling', text: 'Utilizes trained regression models  to compare actual energy usage against expected usage under similar conditions.' },
-        { title: 'Predictive Alerts', text: 'Employs outlier detection via Z-score and time-series trend deviation to issue proactive alerts for unusual energy patterns.' },
-        { title: 'Gamification Engine', text: 'Features leaderboards based on relative energy savings (actual vs. counterfactual), incentivizing healthy competition and sustained behavioral change.' },
+        { title: 'Real-Time Dashboard', text: 'Monitor energy usage effectively across your institution with a live, intuitive dashboard that breaks down consumption for clear analysis.' },
+        { title: 'Predictive Analytics', text: 'Our platform identifies underperforming systems early by comparing actual usage against AI-generated predictions, flagging potential waste.' },
+        { title: 'Promote Energy Efficiency', text: 'Receive actionable insights and alerts designed to help you minimize unnecessary energy consumption and optimize operational efficiency.' },
+        { title: 'Gamified Incentives', text: 'Engage the entire community with a gamified dashboard, featuring contests and leaderboards that reward tangible energy savings.' },
         ];
 
   return (
@@ -19,7 +19,7 @@ const HowItWorksSection: React.FC = () => {
         <div className="text-center mb-12">
             <h2 className={`text-4xl md:text-5xl font-bold text-text-primary transition-all duration-500 ${isVisible ? 'animate-slide-and-fade-in' : 'opacity-0'}`}>How Our Platform Works</h2>
             <p className={`mt-4 max-w-2xl mx-auto text-text-secondary transition-all duration-500 ${isVisible ? 'animate-slide-and-fade-in' : 'opacity-0'}`} style={{animationDelay: '150ms'}}>
-                Each feature is designed to provide actionable insights and drive energy efficiency through intelligent data analysis and user engagement.
+                Our integrated cycle of monitoring, analysis, and engagement provides a comprehensive solution for smart energy management.
             </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
