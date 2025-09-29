@@ -1,15 +1,18 @@
 import React from 'react';
 import Card from '../ui/Card';
 import useScrollAnimate from '../../hooks/useScrollAnimate';
-import { Database, Code, Brain } from 'lucide-react';
+import { Code, Brain, Palette, Server, Blocks } from 'lucide-react';
 
 const TeamSection = () => {
     const { ref, isVisible } = useScrollAnimate();
 
     const team = [
-        { name: 'Kunal', role: 'Team Lead', description: 'UI/UX and Front-end Designer', icon: Database },
-        { name: 'Kavyansh', role: 'Web Developer', description: 'Specializes in dashboard design and backend architecture.', icon: Code },
-        { name: 'Rishabh', role: 'AI/ML Engineer', description: 'Drives the prediction engine and counterfactual modeling for optimal insights.', icon: Brain }
+        { name: 'Priyansh Joshi', role: 'Frontend UI/UX Designer', description: 'Crafts the user interface and experience for a beautiful, intuitive dashboard.', icon: Palette },
+        { name: 'Vikas Chandwara', role: 'Lead Web Developer', description: 'Leads the overall web development and application architecture.', icon: Code },
+        { name: 'Anushka Rani', role: 'Backend Web Developer', description: 'Manages server-side logic, databases, and API integrations.', icon: Server },
+        { name: 'Garvit Dudeja', role: 'AI/ML Engineer', description: 'Develops the core prediction engine and counterfactual models.', icon: Brain },
+        { name: 'Kunal Thapliyal', role: 'AI/ML Engineer', description: 'Focuses on model optimization and deploying AI-driven insights.', icon: Brain },
+        { name: 'Neel Shah', role: 'Blockchain & Web Developer', description: 'Integrates web technologies and explores blockchain applications.', icon: Blocks }
     ];
 
     return (
@@ -21,7 +24,7 @@ const TeamSection = () => {
                         Our dedicated team combines expertise in web development, database management, and cutting-edge AI/ML to bring this vision to life.
                     </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {team.map((member, index) => (
                         <Card key={index} className={`text-center transition-all duration-500 ${isVisible ? 'animate-slide-and-fade-in' : 'opacity-0'}`} style={{animationDelay: `${(index + 2) * 150}ms`}}>
                            <div className="flex justify-center mb-4">

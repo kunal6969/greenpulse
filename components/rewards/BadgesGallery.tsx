@@ -1,5 +1,6 @@
 
 
+
 import React, { useContext, useMemo } from 'react';
 import Card from '../ui/Card';
 import { Leaf, Zap, BarChart3, Sun, Moon } from 'lucide-react';
@@ -78,8 +79,9 @@ const BadgesGallery: React.FC = () => {
       <h2 className="text-xl font-bold text-text-primary mb-1">Badges Collection</h2>
       <p className="text-sm text-text-secondary mb-4">Achievements unlocked based on your building's performance data.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* FIX: Replaced prop spreading with explicit props to resolve potential typing issues. */}
         {badges.map((badge, index) => (
-          <Badge key={index} {...badge} />
+          <Badge key={index} icon={badge.icon} title={badge.title} description={badge.description} earned={badge.earned} />
         ))}
       </div>
     </Card>
