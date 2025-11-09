@@ -4,7 +4,7 @@ import HeroSection from './HeroSection';
 import FeaturesSection from './FeaturesSection';
 import HowItWorksSection from './HowItWorksSection';
 import DifferentiatorsSection from './DifferentiatorsSection';
-import TeamSection from './TeamSection';
+// import TeamSection from './TeamSection';
 import LandingFooter from './LandingFooter';
 import FloatingLeaves from '../ui/FloatingLeaves';
 import FlowingGlints from '../ui/FlowingGlints';
@@ -32,7 +32,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
         <FeaturesSection />
         <HowItWorksSection />
         <DifferentiatorsSection />
-        <TeamSection />
+        {/* <TeamSection /> */}
       </main>
       <LandingFooter />
     </div>

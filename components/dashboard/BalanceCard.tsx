@@ -14,16 +14,16 @@ interface KPICardProps {
 
 const KPI_Card: React.FC<KPICardProps> = ({ title, value, unit, trend, Icon, trendColor }) => {
   return (
-    <Card className="flex flex-col justify-between">
-      <div className="flex justify-between items-center">
+    <Card className="flex flex-col justify-between p-4">
+      <div className="flex justify-between items-start">
         <p className="text-text-secondary text-sm font-medium">{title}</p>
         <Icon className={`w-5 h-5 ${trendColor}`} />
       </div>
       <div>
-        <p className="text-3xl font-semibold text-text-primary mt-2">
-          {value} <span className="text-xl text-text-secondary">{unit}</span>
+        <p className="text-2xl sm:text-3xl font-semibold text-text-primary mt-2">
+          {value} <span className="text-lg sm:text-xl text-text-secondary">{unit}</span>
         </p>
-        <p className={`text-sm font-medium mt-1 ${trendColor}`}>{trend}</p>
+        <p className={`text-xs sm:text-sm font-medium mt-1 ${trendColor} truncate`}>{trend}</p>
       </div>
     </Card>
   );

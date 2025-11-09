@@ -152,11 +152,11 @@ const ReportsPage: React.FC = () => {
           <div className="flex flex-wrap items-center gap-4">
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} min={dateRange.min} max={dateRange.max} className="bg-bg-secondary border border-border-color rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary w-48 text-text-primary" />
+              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} min={dateRange.min} max={dateRange.max} className="bg-bg-secondary border border-border-color rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary w-full sm:w-48 text-text-primary" />
             </div>
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} min={dateRange.min} max={dateRange.max} className="bg-bg-secondary border border-border-color rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary w-48 text-text-primary" />
+              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} min={dateRange.min} max={dateRange.max} className="bg-bg-secondary border border-border-color rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary w-full sm:w-48 text-text-primary" />
             </div>
             <button onClick={handleGenerateReport} disabled={isGenerating} className="bg-primary/10 hover:bg-primary/20 text-primary font-bold py-2 px-4 rounded-lg transition-colors text-sm flex items-center disabled:opacity-50">
               {isGenerating ? <Loader2 className="animate-spin mr-2" size={16}/> : <Cpu size={16} className="mr-2"/>}

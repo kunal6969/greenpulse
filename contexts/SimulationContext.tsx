@@ -105,18 +105,34 @@ export const SimulationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   }, [buildingId]);
 
   const advanceTime = useCallback(() => {
-    if (buildingData.length === 0) return;
-
     setSimulationTime(prevTime => {
-      const currentIndex = buildingData.findIndex(p => p.historical! >= prevTime);
-      if (currentIndex === -1) return buildingData[0]?.historical || prevTime;
+        // Guard clauses: no data, or already at/past the end of the data.
+        if (buildingData.length === 0 || !dataEndDate || prevTime >= dataEndDate) {
+            setIsPaused(true);
+            return prevTime;
+        }
 
-      // FIX: Use the simulationRate from state to determine how many hours to advance.
-      const nextIndex = (currentIndex + simulationRate.hoursPerTick) % buildingData.length;
-      return buildingData[nextIndex].historical!;
+        // Find the index of the last data point that is at or before the current simulation time.
+        const currentIndex = buildingData.findLastIndex(p => p.historical! <= prevTime);
+        
+        // This should not happen if we have data, but as a fallback.
+        if (currentIndex === -1) {
+            return buildingData[0].historical!;
+        }
+
+        // Calculate the next index based on the simulation speed.
+        const nextIndex = currentIndex + simulationRate.hoursPerTick;
+
+        // Check if the next index is at or beyond the end of the dataset.
+        if (nextIndex >= buildingData.length - 1) {
+            setIsPaused(true); // Auto-pause the simulation.
+            return buildingData[buildingData.length - 1].historical!; // Settle on the very last data point.
+        }
+
+        // Otherwise, advance to the calculated next data point.
+        return buildingData[nextIndex].historical!;
     });
-  // FIX: Add simulationRate.hoursPerTick to the dependency array.
-  }, [buildingData, simulationRate.hoursPerTick]);
+  }, [buildingData, dataEndDate, simulationRate.hoursPerTick]);
 
   useEffect(() => {
     if (!isPaused && !isLoading && buildingData.length > 0) {
@@ -136,6 +152,10 @@ export const SimulationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   }, [isPaused, isLoading, buildingData, advanceTime, simulationRate.intervalMs]);
 
   const togglePlayPause = () => {
+    // If user tries to play when the simulation is already at the end, do nothing.
+    if (isPaused && dataEndDate && simulationTime >= dataEndDate) {
+        return;
+    }
     setIsPaused(prev => !prev);
   };
   

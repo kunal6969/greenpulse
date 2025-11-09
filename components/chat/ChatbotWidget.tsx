@@ -102,7 +102,7 @@ const ChatbotWidget: React.FC = () => {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-primary hover:bg-primary-focus text-bg-primary rounded-full p-4 shadow-glow-primary transition-all duration-300 z-50 animate-subtle-pulse-glow"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-primary hover:bg-primary-focus text-bg-primary rounded-full p-4 shadow-glow-primary transition-all duration-300 z-50 animate-subtle-pulse-glow"
         aria-label="Open Chatbot"
       >
         <Bot size={28} />
@@ -117,7 +117,7 @@ const ChatbotWidget: React.FC = () => {
   }[status];
 
   return (
-    <div className="fixed bottom-6 right-6 w-[380px] h-[550px] bg-bg-secondary/80 backdrop-blur-xl border border-glass-border rounded-2xl shadow-card flex flex-col z-50 animate-fade-in">
+    <div className="fixed bottom-0 right-0 w-full h-full sm:h-[550px] sm:w-[380px] sm:bottom-6 sm:right-6 bg-bg-secondary/80 backdrop-blur-xl border border-glass-border sm:rounded-2xl shadow-card flex flex-col z-50 animate-fade-in chatbot-widget">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-glass-border">
         <div className="flex items-center">
@@ -188,10 +188,10 @@ const ChatbotWidget: React.FC = () => {
       </div>
       
       {/* Exit Button */}
-      <div className="border-t border-glass-border">
+      <div className="border-t border-glass-border sm:hidden">
         <button
           onClick={() => setIsOpen(false)}
-          className="w-full flex items-center justify-center space-x-2 py-2 text-sm text-text-secondary hover:bg-red-500/10 hover:text-red-400 transition-colors"
+          className="w-full flex items-center justify-center space-x-2 py-3 text-sm text-text-secondary hover:bg-red-500/10 hover:text-red-400 transition-colors"
           aria-label="Exit chat"
         >
           <LogOut size={16} />

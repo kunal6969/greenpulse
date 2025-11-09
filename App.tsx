@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LandingPage from './components/landing/LandingPage';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
@@ -14,13 +14,23 @@ import AmbientSoundPlayer from './components/ui/AmbientSoundPlayer';
 import AuroraBackground from './components/ui/AuroraBackground';
 import GlowingOrbs from './components/ui/GlowingOrbs';
 import DriftingParticles from './components/ui/DriftingParticles';
+import ChatbotWidget from './components/chat/ChatbotWidget';
 
 const App: React.FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [activePage, setActivePage] = useState('Dashboard');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
 
     const handleLogin = () => setIsLoggedIn(true);
     const handleLogout = () => setIsLoggedIn(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSidebarOpen(window.innerWidth > 1024);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     if (!isLoggedIn) {
         return <LandingPage onLogin={handleLogin} />;
@@ -45,14 +55,25 @@ const App: React.FC = () => {
             <DriftingParticles />
             <AmbientSoundPlayer />
             <div className="flex h-screen bg-bg-primary/80 text-text-primary font-outfit">
-                <Sidebar activePage={activePage} setActivePage={setActivePage} onLogout={handleLogout} />
+                <Sidebar 
+                    activePage={activePage} 
+                    setActivePage={setActivePage} 
+                    onLogout={handleLogout}
+                    isOpen={isSidebarOpen}
+                    setIsOpen={setIsSidebarOpen}
+                />
                 <main className="flex-1 flex flex-col overflow-hidden">
-                    <Header title={activePage} subtitle={currentPage.subtitle} />
-                    <div className="flex-1 p-6 overflow-y-auto">
+                    <Header 
+                        title={activePage} 
+                        subtitle={currentPage.subtitle} 
+                        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+                    />
+                    <div className="flex-1 p-2 sm:p-4 md:p-6 overflow-y-auto main-content">
                         {currentPage.component}
                     </div>
                 </main>
             </div>
+            <ChatbotWidget />
         </SimulationProvider>
     );
 };

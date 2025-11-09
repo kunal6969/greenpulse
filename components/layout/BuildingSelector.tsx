@@ -12,7 +12,7 @@ const BuildingSelector: React.FC = () => {
                 value={buildingId}
                 onChange={(e) => setBuildingId(Number(e.target.value))}
                 disabled={isLoading}
-                className="bg-bg-secondary border border-border-color rounded-lg px-2 py-1 text-text-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all text-sm w-20"
+                className="bg-bg-secondary border border-border-color rounded-lg px-2 py-1 text-text-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all text-sm w-full max-w-[100px]"
             >
                 {options.map(id => <option key={id} value={id}>{id}</option>)}
             </select>

@@ -49,7 +49,7 @@ const FloatingLeaves: React.FC = () => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
-      {/* FIX: Explicitly pass props to Leaf component to avoid spreading extra properties like 'id'. */}
+      {/* FIX: Explicitly pass the 'style' prop to the Leaf component. This avoids spreading the entire 'leaf' object which could incorrectly pass 'key' or 'id' as a prop. */}
       {leaves.map(leaf => (
         <Leaf key={leaf.id} style={leaf.style} />
       ))}

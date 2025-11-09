@@ -55,10 +55,10 @@ const Dashboard: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-center text-red-400">
+      <div className="flex flex-col items-center justify-center h-full text-center text-red-400 p-4">
         <AlertCircle className="w-12 h-12 mb-4" />
-        <h2 className="text-2xl font-semibold">Error Loading Data</h2>
-        <p className="text-text-secondary">{error}</p>
+        <h2 className="text-xl sm:text-2xl font-semibold">Error Loading Data</h2>
+        <p className="text-text-secondary text-sm sm:text-base">{error}</p>
       </div>
     );
   }
@@ -72,8 +72,8 @@ const Dashboard: React.FC = () => {
   const carbonFootprint = currentData?.actual ? (currentData.actual * CO2_FACTOR).toFixed(2) : '...';
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 kpi-grid">
         <KPI_Card
           title="Live Consumption"
           value={consumption}
@@ -86,7 +86,7 @@ const Dashboard: React.FC = () => {
           title="Net Savings (vs. Predicted)"
           value={savings}
           unit="kWh"
-          trend={isSaving ? 'Performing better than expected' : 'Higher than expected consumption'}
+          trend={isSaving ? 'Better than expected' : 'Higher than expected'}
           Icon={isSaving ? TrendingDown : TrendingUp}
           trendColor={isSaving ? 'text-primary' : 'text-red-400'}
         />
@@ -94,7 +94,7 @@ const Dashboard: React.FC = () => {
           title="Carbon Footprint"
           value={carbonFootprint}
           unit="kg CO2/hr"
-          trend="Based on live consumption"
+          trend="Based on live usage"
           Icon={Leaf}
           trendColor="text-text-secondary"
         />
@@ -102,7 +102,7 @@ const Dashboard: React.FC = () => {
           title="Last Anomaly (24h)"
           value={latestAnomaly ? `${latestAnomaly.deviation.toFixed(0)}%` : "All Clear"}
           unit={latestAnomaly ? 'deviation' : ''}
-          trend={latestAnomaly ? `At ${latestAnomaly.time}` : 'No significant deviations detected'}
+          trend={latestAnomaly ? `At ${latestAnomaly.time}` : 'No deviations detected'}
           Icon={AlertTriangle}
           trendColor={latestAnomaly ? 'text-secondary' : 'text-primary'}
         />
